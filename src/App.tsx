@@ -1,26 +1,67 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { BrowserRouter, Route } from 'react-router-dom'
 
-function App() {
+// components
+import FormPage from './pages/FormPage/FormPage'
+import HomePage from './pages/HomePage/HomePage'
+import TablePage from './pages/TablePage/TablePage'
+
+// actions
+import { setPages } from './store/actions/actions'
+
+// types
+import { Store } from './store/types'
+
+// utils
+import { splitData } from './utils'
+
+// Количество пользователей на одной странице
+const PAGE_SIZE = 50
+
+const App: React.FC = () => {
+  const dispatch = useDispatch()
+
+  const {
+    users,
+    isLoading,
+    sortBy,
+    sortType,
+    filteredUsers,
+    activeUser,
+    currentPage
+  } = useSelector((state: Store) => state)
+
+  // Если есть отфильтрованные пользователи, то возвращаются отфильтрованные,иначе все
+  const currentUsers = filteredUsers.length !== 0 ? filteredUsers : users
+
+  // Расчет страниц исходя из количества пользователей
+  React.useEffect(() => {
+    dispatch(setPages(currentUsers, PAGE_SIZE))
+  }, [currentUsers])
+
+  // Разделение массива пользователей на массив подмассивов (реализация пагинации)
+  const usersChunk =
+    currentUsers && splitData(currentUsers, PAGE_SIZE)[currentPage]
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <Route path='/' component={HomePage} exact />
+      <Route path='/form' component={FormPage} />
+      <Route
+        path='/table'
+        component={() => (
+          <TablePage
+            users={usersChunk}
+            isLoading={isLoading}
+            sortBy={sortBy}
+            sortType={sortType}
+            activeUser={activeUser}
+          />
+        )}
+      />
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App

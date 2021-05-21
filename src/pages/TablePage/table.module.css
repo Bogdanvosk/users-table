@@ -1,0 +1,16 @@
+.row,
+.heading {
+  cursor: pointer;
+}
+
+.heading:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+.heading img {
+  margin-left: 10px;
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
