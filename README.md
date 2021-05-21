@@ -1,3 +1,15 @@
+# Используемые технологии
+
+- React
+- Redux
+- Typescript
+- Redux-thunk
+- React-bootstrap
+- Formik
+- Yup
+- Immer
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
